@@ -445,10 +445,12 @@ static int keychord_init_action(const std::vector<std::string>& args)
 
 static int console_init_action(const std::vector<std::string>& args)
 {
+#if 0
     std::string console = property_get("ro.boot.console");
     if (!console.empty()) {
         default_console = "/dev/" + console;
     }
+#endif
     return 0;
 }
 
