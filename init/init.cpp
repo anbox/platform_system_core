@@ -353,10 +353,11 @@ static int keychord_init_action(const std::vector<std::string>& args)
 
 static int console_init_action(const std::vector<std::string>& args)
 {
+#if 0
     std::string console = property_get("ro.boot.console");
     if (!console.empty()) {
         console_name = "/dev/" + console;
-    }
+#endif
 
     int fd = open(console_name.c_str(), O_RDWR | O_CLOEXEC);
     if (fd >= 0)
