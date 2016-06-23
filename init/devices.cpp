@@ -1025,17 +1025,19 @@ void device_init(const char* path, coldboot_callback fn) {
     }
 
     Timer t;
-    coldboot_action_t act;
-    if (!path) {
-        act = coldboot("/sys/class", fn);
-        if (!should_stop_coldboot(act)) {
-            act = coldboot("/sys/block", fn);
+    if (false) {
+        coldboot_action_t act;
+        if (!path) {
+            act = coldboot("/sys/class", fn);
             if (!should_stop_coldboot(act)) {
-                act = coldboot("/sys/devices", fn);
+                act = coldboot("/sys/block", fn);
+                if (!should_stop_coldboot(act)) {
+                    act = coldboot("/sys/devices", fn);
+                }
             }
+        } else {
+            act = coldboot(path, fn);
         }
-    } else {
-        act = coldboot(path, fn);
     }
 
     // If we have a callback, then do as it says. If no, then the default is
