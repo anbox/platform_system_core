@@ -188,6 +188,7 @@ static void server_socket_thread(void* arg) {
 #undef write
 #define open    adb_open
 #define write   adb_write
+#define QEMU_PIPE_FROM_ADB
 #include <hardware/qemu_pipe.h>
 #undef open
 #undef write
