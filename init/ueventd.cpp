@@ -49,7 +49,7 @@ int ueventd_main(int argc, char **argv)
      */
     signal(SIGCHLD, SIG_IGN);
 
-    open_devnull_stdio();
+    // open_devnull_stdio();
     klog_init();
     klog_set_level(KLOG_NOTICE_LEVEL);
 
