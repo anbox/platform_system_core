@@ -187,11 +187,13 @@ uint32_t property_set(const std::string& name, const std::string& value) {
         return PROP_ERROR_INVALID_VALUE;
     }
 
+#if 0
     if (name == "selinux.restorecon_recursive" && valuelen > 0) {
         if (restorecon(value.c_str(), SELINUX_ANDROID_RESTORECON_RECURSE) != 0) {
             LOG(ERROR) << "Failed to restorecon_recursive " << value;
         }
     }
+#endif
 
     prop_info* pi = (prop_info*) __system_property_find(name.c_str());
     if (pi != nullptr) {
