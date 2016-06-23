@@ -990,9 +990,14 @@ void device_init() {
     }
 
     Timer t;
-    coldboot("/sys/class");
-    coldboot("/sys/block");
-    coldboot("/sys/devices");
+    // AndroidBox: Don't coldboot as we don't have access
+    // to any device but keep code to not run into multiple
+    // -Wunused-function compile time errors.
+    if (false) {
+        coldboot("/sys/class");
+        coldboot("/sys/block");
+        coldboot("/sys/devices");
+    }
     close(open(COLDBOOT_DONE, O_WRONLY|O_CREAT|O_CLOEXEC, 0000));
     NOTICE("Coldboot took %.2fs.\n", t.duration());
 }
