@@ -64,6 +64,7 @@ using namespace std::chrono_literals;
 
 std::once_flag init_path_flag;
 
+#if 0
 struct ctx {
     bool initialized;
     int fd;
@@ -224,9 +225,11 @@ static void removeUidProcessGroups(const char *uid_path)
         }
     }
 }
+#endif
 
 void removeAllProcessGroups()
 {
+#if 0
     LOG(VERBOSE) << "removeAllProcessGroups()";
     const char* cgroup_root_path = getCgroupRootPath();
     std::unique_ptr<DIR, decltype(&closedir)> root(opendir(cgroup_root_path), closedir);
@@ -250,8 +253,10 @@ void removeAllProcessGroups()
             if (rmdir(path) == -1) PLOG(WARNING) << "failed to remove " << path;
         }
     }
+#endif
 }
 
+#if 0
 static int killProcessGroupOnce(uid_t uid, int initialPid, int signal)
 {
     int processes = 0;
@@ -281,9 +286,14 @@ static int killProcessGroupOnce(uid_t uid, int initialPid, int signal)
 
     return processes;
 }
+#endif
 
 int killProcessGroup(uid_t uid, int initialPid, int signal)
 {
+    (void) uid;
+    (void) initialPid;
+    (void) signal;
+#if 0
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
     int retry = 40;
@@ -311,8 +321,12 @@ int killProcessGroup(uid_t uid, int initialPid, int signal)
     } else {
         return -1;
     }
+#else
+    return 0;
+#endif
 }
 
+#if 0
 static bool mkdirAndChown(const char *path, mode_t mode, uid_t uid, gid_t gid)
 {
     if (mkdir(path, mode) == -1 && errno != EEXIST) {
@@ -328,9 +342,13 @@ static bool mkdirAndChown(const char *path, mode_t mode, uid_t uid, gid_t gid)
 
     return true;
 }
+#endif
 
 int createProcessGroup(uid_t uid, int initialPid)
 {
+    (void) uid;
+    (void) initialPid;
+#if 0
     char path[PROCESSGROUP_MAX_PATH_LEN] = {0};
 
     convertUidToPath(path, sizeof(path), uid);
@@ -367,4 +385,7 @@ int createProcessGroup(uid_t uid, int initialPid)
 
     close(fd);
     return ret;
+#else
+    return 0;
+#endif
 }
