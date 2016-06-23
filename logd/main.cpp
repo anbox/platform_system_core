@@ -157,12 +157,14 @@ static int drop_privs(bool klogd, bool auditd) {
         if (!eng) return -1;
     }
 
+#if 0
     if (cap_set_flag(caps.get(), CAP_PERMITTED, 1, cap_value, CAP_CLEAR) < 0) return -1;
     if (cap_set_flag(caps.get(), CAP_EFFECTIVE, 1, cap_value, CAP_CLEAR) < 0) return -1;
     if (cap_set_proc(caps.get()) < 0) {
         android::prdebug("failed to clear CAP_SETGID (%d)", errno);
         if (!eng) return -1;
     }
+#endif
 
     return 0;
 }
@@ -487,6 +489,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+#if 0
     // LogAudit listens on NETLINK_AUDIT socket for selinux
     // initiated log messages. New log entries are added to LogBuffer
     // and LogReader is notified to send updates to connected clients.
@@ -517,6 +520,7 @@ int main(int argc, char *argv[]) {
     if (al && al->startListener()) {
         delete al;
     }
+#endif
 
     TEMP_FAILURE_RETRY(pause());
 
