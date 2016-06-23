@@ -175,6 +175,7 @@ static int property_set_impl(const char* name, const char* value) {
     if (!is_legal_property_name(name, namelen)) return -1;
     if (valuelen >= PROP_VALUE_MAX) return -1;
 
+#if 0
     if (strcmp("selinux.reload_policy", name) == 0 && strcmp("1", value) == 0) {
         if (selinux_reload_policy() != 0) {
             ERROR("Failed to reload policy\n");
@@ -184,6 +185,7 @@ static int property_set_impl(const char* name, const char* value) {
             ERROR("Failed to restorecon_recursive %s\n", value);
         }
     }
+#endif
 
     prop_info* pi = (prop_info*) __system_property_find(name);
 
