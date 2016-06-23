@@ -29,6 +29,7 @@ static bool autosuspend_inited;
 
 static int autosuspend_init(void)
 {
+#if 0
     if (autosuspend_inited) {
         return 0;
     }
@@ -61,10 +62,14 @@ out:
 
     ALOGV("autosuspend initialized\n");
     return 0;
+#else
+    return 0;
+#endif
 }
 
 int autosuspend_enable(void)
 {
+#if 0
     int ret;
 
     ret = autosuspend_init();
@@ -85,10 +90,14 @@ int autosuspend_enable(void)
 
     autosuspend_enabled = true;
     return 0;
+#else
+    return 0;
+#endif
 }
 
 int autosuspend_disable(void)
 {
+#if 0
     int ret;
 
     ret = autosuspend_init();
@@ -109,4 +118,7 @@ int autosuspend_disable(void)
 
     autosuspend_enabled = false;
     return 0;
+#else
+    return 0;
+#endif
 }
