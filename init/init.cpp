@@ -73,7 +73,9 @@ struct selabel_handle *sehandle_prop;
 
 static int property_triggers_enabled = 0;
 
+#if 0
 static char qemu[32];
+#endif
 
 int have_console;
 std::string console_name = "/dev/console";
@@ -389,6 +391,7 @@ static int console_init_action(const std::vector<std::string>& args)
     return 0;
 }
 
+#if 0
 static void import_kernel_nv(const std::string& key, const std::string& value, bool for_emulator) {
     if (key.empty()) return;
 
@@ -405,6 +408,7 @@ static void import_kernel_nv(const std::string& key, const std::string& value, b
                      value.c_str());
     }
 }
+#endif
 
 static void export_oem_lock_status() {
     if (property_get("ro.oem_unlock_supported") != "1") {
@@ -437,7 +441,9 @@ static void export_kernel_boot_props() {
     }
 }
 
-static void process_kernel_dt() {
+#if 0
+static void process_kernel_dt(void)
+{
     static const char android_dir[] = "/proc/device-tree/firmware/android";
 
     std::string file_name = android::base::StringPrintf("%s/compatible", android_dir);
@@ -478,6 +484,7 @@ static void process_kernel_cmdline() {
     import_kernel_cmdline(false, import_kernel_nv);
     if (qemu[0]) import_kernel_cmdline(true, import_kernel_nv);
 }
+#endif
 
 static int queue_property_triggers_action(const std::vector<std::string>& args)
 {
@@ -603,12 +610,12 @@ int main(int argc, char** argv) {
     // Get the basic filesystem setup we need put together in the initramdisk
     // on / and then we'll let the rc file figure out the rest.
     if (is_first_stage) {
-        mount("tmpfs", "/dev", "tmpfs", MS_NOSUID, "mode=0755");
-        mkdir("/dev/pts", 0755);
+        // mount("tmpfs", "/dev", "tmpfs", MS_NOSUID, "mode=0755");
+        // mkdir("/dev/pts", 0755);
         mkdir("/dev/socket", 0755);
-        mount("devpts", "/dev/pts", "devpts", 0, NULL);
-        #define MAKE_STR(x) __STRING(x)
-        mount("proc", "/proc", "proc", 0, "hidepid=2,gid=" MAKE_STR(AID_READPROC));
+        // mount("devpts", "/dev/pts", "devpts", 0, NULL);
+        // #define MAKE_STR(x) __STRING(x)
+        // mount("proc", "/proc", "proc", 0, "hidepid=2,gid=" MAKE_STR(AID_READPROC));
         mount("sysfs", "/sys", "sysfs", 0, NULL);
     }
 
@@ -616,7 +623,7 @@ int main(int argc, char** argv) {
     // kmsg and null, otherwise we won't be able to remount / read-only
     // later on. Now that tmpfs is mounted on /dev, we can actually talk
     // to the outside world.
-    open_devnull_stdio();
+    // open_devnull_stdio();
     klog_init();
     klog_set_level(KLOG_NOTICE_LEVEL);
 
@@ -628,10 +635,12 @@ int main(int argc, char** argv) {
 
         property_init();
 
+#if 0
         // If arguments are passed both on the command line and in DT,
         // properties set in DT always have priority over the command-line ones.
         process_kernel_dt();
         process_kernel_cmdline();
+#endif
 
         // Propagate the kernel variables to internal variables
         // used by init as well as the current required properties.
@@ -702,9 +711,11 @@ int main(int argc, char** argv) {
     // Trigger all the boot actions to get us started.
     am.QueueEventTrigger("init");
 
+#if 0
     // Repeat mix_hwrng_into_linux_rng in case /dev/hw_random or /dev/random
     // wasn't ready immediately after wait_for_coldboot_done
     am.QueueBuiltinAction(mix_hwrng_into_linux_rng_action, "mix_hwrng_into_linux_rng");
+#endif
 
     // Don't mount filesystems or start core system services in charger mode.
     std::string bootmode = property_get("ro.bootmode");
