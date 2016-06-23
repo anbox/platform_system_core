@@ -496,6 +496,7 @@ static void selinux_init_all_handles(void)
 
 enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
 
+#if 0
 static selinux_enforcing_status selinux_status_from_cmdline() {
     selinux_enforcing_status status = SELINUX_ENFORCING;
 
@@ -507,13 +508,11 @@ static selinux_enforcing_status selinux_status_from_cmdline() {
 
     return status;
 }
+#endif
 
 static bool selinux_is_enforcing(void)
 {
-    if (ALLOW_PERMISSIVE_SELINUX) {
-        return selinux_status_from_cmdline() == SELINUX_ENFORCING;
-    }
-    return true;
+    return false;
 }
 
 int selinux_reload_policy(void)
