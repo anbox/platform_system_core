@@ -37,6 +37,7 @@
 #define READONLY_CHECK_MS 5000
 #define READONLY_CHECK_TIMES 50
 
+#if 0
 typedef struct {
     struct listnode list;
     struct mntent entry;
@@ -208,6 +209,7 @@ out:
     free_entries(&rw_entries);
     free_entries(&ro_entries);
 }
+#endif
 
 int android_reboot_with_callback(
     int cmd, int flags __unused, const char *arg,
