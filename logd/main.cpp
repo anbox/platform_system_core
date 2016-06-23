@@ -120,25 +120,6 @@ static int drop_privs() {
         return -1;
     }
 
-    struct __user_cap_header_struct capheader;
-    struct __user_cap_data_struct capdata[2];
-    memset(&capheader, 0, sizeof(capheader));
-    memset(&capdata, 0, sizeof(capdata));
-    capheader.version = _LINUX_CAPABILITY_VERSION_3;
-    capheader.pid = 0;
-
-    capdata[CAP_TO_INDEX(CAP_SYSLOG)].permitted = CAP_TO_MASK(CAP_SYSLOG);
-    capdata[CAP_TO_INDEX(CAP_AUDIT_CONTROL)].permitted |= CAP_TO_MASK(CAP_AUDIT_CONTROL);
-
-    capdata[0].effective = capdata[0].permitted;
-    capdata[1].effective = capdata[1].permitted;
-    capdata[0].inheritable = 0;
-    capdata[1].inheritable = 0;
-
-    if (capset(&capheader, &capdata[0]) < 0) {
-        return -1;
-    }
-
     return 0;
 }
 
@@ -370,17 +351,6 @@ static void readDmesg(LogAudit *al, LogKlog *kl) {
 // logging plugins like auditd and restart control. Additional
 // transitory per-client threads are created for each reader.
 int main(int argc, char *argv[]) {
-    int fdPmesg = -1;
-    bool klogd = property_get_bool("logd.kernel",
-                                   BOOL_DEFAULT_TRUE |
-                                   BOOL_DEFAULT_FLAG_PERSIST |
-                                   BOOL_DEFAULT_FLAG_ENG |
-                                   BOOL_DEFAULT_FLAG_SVELTE);
-    if (klogd) {
-        fdPmesg = open("/proc/kmsg", O_RDONLY | O_NDELAY);
-    }
-    fdDmesg = open("/dev/kmsg", O_WRONLY);
-
     // issue reinit command. KISS argument parsing.
     if ((argc > 1) && argv[1] && !strcmp(argv[1], "--reinit")) {
         int sock = TEMP_FAILURE_RETRY(
@@ -487,40 +457,6 @@ int main(int argc, char *argv[]) {
     CommandListener *cl = new CommandListener(logBuf, reader, swl);
     if (cl->startListener()) {
         exit(1);
-    }
-
-    // LogAudit listens on NETLINK_AUDIT socket for selinux
-    // initiated log messages. New log entries are added to LogBuffer
-    // and LogReader is notified to send updates to connected clients.
-
-    bool auditd = property_get_bool("logd.auditd",
-                                    BOOL_DEFAULT_TRUE |
-                                    BOOL_DEFAULT_FLAG_PERSIST);
-    LogAudit *al = NULL;
-    if (auditd) {
-        al = new LogAudit(logBuf, reader,
-                          property_get_bool("logd.auditd.dmesg",
-                                            BOOL_DEFAULT_TRUE |
-                                            BOOL_DEFAULT_FLAG_PERSIST)
-                              ? fdDmesg
-                              : -1);
-    }
-
-    LogKlog *kl = NULL;
-    if (klogd) {
-        kl = new LogKlog(logBuf, reader, fdDmesg, fdPmesg, al != NULL);
-    }
-
-    readDmesg(al, kl);
-
-    // failure is an option ... messages are in dmesg (required by standard)
-
-    if (kl && kl->startListener()) {
-        delete kl;
-    }
-
-    if (al && al->startListener()) {
-        delete al;
     }
 
     TEMP_FAILURE_RETRY(pause());
