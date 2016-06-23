@@ -213,6 +213,10 @@ int android_reboot_with_callback(
     int cmd, int flags __unused, const char *arg,
     void (*cb_on_remount)(const struct mntent*))
 {
+    (void) cmd;
+    (void) arg;
+    (void) cb_on_remount;
+#if 0
     int ret;
     remount_ro(cb_on_remount);
     switch (cmd) {
@@ -234,6 +238,9 @@ int android_reboot_with_callback(
     }
 
     return ret;
+#else
+    return 0;
+#endif
 }
 
 int android_reboot(int cmd, int flags, const char *arg)
