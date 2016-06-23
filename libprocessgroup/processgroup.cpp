@@ -61,6 +61,7 @@
 
 std::once_flag init_path_flag;
 
+#if 0
 struct ctx {
     bool initialized;
     int fd;
@@ -223,9 +224,11 @@ static void removeUidProcessGroups(const char *uid_path)
         closedir(uid);
     }
 }
+#endif
 
 void removeAllProcessGroups()
 {
+#if 0
     SLOGV("removeAllProcessGroups()");
     const char *cgroup_root_path = getCgroupRootPath();
     DIR *root = opendir(cgroup_root_path);
@@ -251,8 +254,10 @@ void removeAllProcessGroups()
         }
         closedir(root);
     }
+#endif
 }
 
+#if 0
 static int killProcessGroupOnce(uid_t uid, int initialPid, int signal)
 {
     int processes = 0;
@@ -288,9 +293,14 @@ static int killProcessGroupOnce(uid_t uid, int initialPid, int signal)
 
     return processes;
 }
+#endif
 
 int killProcessGroup(uid_t uid, int initialPid, int signal)
 {
+    (void) uid;
+    (void) initialPid;
+    (void) signal;
+#if 0
     int processes;
     const int sleep_us = 5 * 1000;  // 5ms
     int64_t startTime = android::uptimeMillis();
@@ -316,8 +326,12 @@ int killProcessGroup(uid_t uid, int initialPid, int signal)
     } else {
         return -1;
     }
+#else
+    return 0;
+#endif
 }
 
+#if 0
 static int mkdirAndChown(const char *path, mode_t mode, uid_t uid, gid_t gid)
 {
     int ret;
@@ -336,9 +350,13 @@ static int mkdirAndChown(const char *path, mode_t mode, uid_t uid, gid_t gid)
 
     return 0;
 }
+#endif
 
 int createProcessGroup(uid_t uid, int initialPid)
 {
+    (void) uid;
+    (void) initialPid;
+#if 0
     char path[PROCESSGROUP_MAX_PATH_LEN] = {0};
     int ret;
 
@@ -380,5 +398,8 @@ int createProcessGroup(uid_t uid, int initialPid)
 
     close(fd);
     return ret;
+#else
+    return 0;
+#endif
 }
 
