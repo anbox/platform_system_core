@@ -584,9 +584,6 @@ on boot
 
     class_start core
 
-on nonencrypted
-    # A/B update verifier that marks a successful boot.
-    exec - root cache -- /system/bin/update_verifier nonencrypted
     class_start main
     class_start late_start
 
