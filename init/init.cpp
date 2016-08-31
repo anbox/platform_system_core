@@ -340,6 +340,9 @@ static int set_mmap_rnd_bits_action(const std::vector<std::string>& args)
     // TODO: b/27794137
     ret = 0;
 #endif
+#if 1
+    ret = 0;
+#endif
     if (ret == -1) {
         ERROR("Unable to set adequate mmap entropy value!\n");
         security_failure();
@@ -494,6 +497,7 @@ static int queue_property_triggers_action(const std::vector<std::string>& args)
     return 0;
 }
 
+#if 0
 static void selinux_init_all_handles(void)
 {
     sehandle = selinux_android_file_context_handle();
@@ -503,7 +507,6 @@ static void selinux_init_all_handles(void)
 
 enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
 
-#if 0
 static selinux_enforcing_status selinux_status_from_cmdline() {
     selinux_enforcing_status status = SELINUX_ENFORCING;
 
@@ -515,15 +518,16 @@ static selinux_enforcing_status selinux_status_from_cmdline() {
 
     return status;
 }
-#endif
 
 static bool selinux_is_enforcing(void)
 {
     return false;
 }
+#endif
 
 int selinux_reload_policy(void)
 {
+#if 0
     INFO("SELinux: Attempting to reload policy files\n");
 
     if (selinux_android_reload_policy() == -1) {
@@ -537,9 +541,11 @@ int selinux_reload_policy(void)
         selabel_close(sehandle_prop);
 
     selinux_init_all_handles();
+#endif
     return 0;
 }
 
+#if 0
 static int audit_callback(void *data, security_class_t /*cls*/, char *buf, size_t len) {
 
     property_audit_data *d = reinterpret_cast<property_audit_data*>(data);
@@ -553,7 +559,9 @@ static int audit_callback(void *data, security_class_t /*cls*/, char *buf, size_
             d->cr->pid, d->cr->uid, d->cr->gid);
     return 0;
 }
+#endif
 
+#if 0
 static void selinux_initialize(bool in_kernel_domain) {
     Timer t;
 
@@ -590,6 +598,7 @@ static void selinux_initialize(bool in_kernel_domain) {
         selinux_init_all_handles();
     }
 }
+#endif
 
 int main(int argc, char** argv) {
     if (!strcmp(basename(argv[0]), "ueventd")) {
@@ -648,7 +657,9 @@ int main(int argc, char** argv) {
     }
 
     // Set up SELinux, including loading the SELinux policy if we're in the kernel domain.
+#if 0
     selinux_initialize(is_first_stage);
+#endif
 
     // If we're in the kernel domain, re-exec init to transition to the init domain now
     // that the SELinux policy has been loaded.

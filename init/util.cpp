@@ -105,12 +105,14 @@ int create_socket(const char *name, int type, mode_t perm, uid_t uid,
     int fd, ret, savederrno;
     char *filecon;
 
+#if 0
     if (socketcon) {
         if (setsockcreatecon(socketcon) == -1) {
             ERROR("setsockcreatecon(\"%s\") failed: %s\n", socketcon, strerror(errno));
             return -1;
         }
     }
+#endif
 
     fd = socket(PF_UNIX, type, 0);
     if (fd < 0) {
@@ -118,8 +120,10 @@ int create_socket(const char *name, int type, mode_t perm, uid_t uid,
         return -1;
     }
 
+#if 0
     if (socketcon)
         setsockcreatecon(NULL);
+#endif
 
     memset(&addr, 0 , sizeof(addr));
     addr.sun_family = AF_UNIX;
@@ -142,8 +146,10 @@ int create_socket(const char *name, int type, mode_t perm, uid_t uid,
     ret = bind(fd, (struct sockaddr *) &addr, sizeof (addr));
     savederrno = errno;
 
+#if 0
     setfscreatecon(NULL);
     freecon(filecon);
+#endif
 
     if (ret) {
         ERROR("Failed to bind socket '%s': %s\n", name, strerror(savederrno));

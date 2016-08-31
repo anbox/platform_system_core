@@ -344,6 +344,7 @@ bool Service::Start() {
     }
 
     std::string scon;
+#if 0
     if (!seclabel_.empty()) {
         scon = seclabel_;
     } else {
@@ -384,6 +385,7 @@ bool Service::Start() {
             return false;
         }
     }
+#endif
 
     NOTICE("Starting service '%s'...\n", name_.c_str());
 
@@ -452,6 +454,7 @@ bool Service::Start() {
                 _exit(127);
             }
         }
+#if 0
         if (!seclabel_.empty()) {
             if (setexeccon(seclabel_.c_str()) < 0) {
                 ERROR("cannot setexeccon('%s'): %s\n",
@@ -459,6 +462,7 @@ bool Service::Start() {
                 _exit(127);
             }
         }
+#endif
 
         std::vector<std::string> expanded_args;
         std::vector<char*> strs;
