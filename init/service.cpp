@@ -595,6 +595,7 @@ bool Service::Start() {
     }
 
     std::string scon;
+#if 0
     if (!seclabel_.empty()) {
         scon = seclabel_;
     } else {
@@ -613,6 +614,7 @@ bool Service::Start() {
     } else {
         pid = fork();
     }
+#endif
 
     if (pid == 0) {
         umask(077);

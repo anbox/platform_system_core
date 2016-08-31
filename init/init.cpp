@@ -584,6 +584,7 @@ static int queue_property_triggers_action(const std::vector<std::string>& args)
     return 0;
 }
 
+#if 0
 static void selinux_init_all_handles(void)
 {
     sehandle = selinux_android_file_context_handle();
@@ -593,7 +594,6 @@ static void selinux_init_all_handles(void)
 
 enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
 
-#if 0
 static selinux_enforcing_status selinux_status_from_cmdline() {
     selinux_enforcing_status status = SELINUX_ENFORCING;
 
@@ -605,13 +605,14 @@ static selinux_enforcing_status selinux_status_from_cmdline() {
 
     return status;
 }
-#endif
 
 static bool selinux_is_enforcing(void)
 {
     return false;
 }
+#endif
 
+#if 0
 static int audit_callback(void *data, security_class_t /*cls*/, char *buf, size_t len) {
 
     property_audit_data *d = reinterpret_cast<property_audit_data*>(data);
@@ -625,6 +626,7 @@ static int audit_callback(void *data, security_class_t /*cls*/, char *buf, size_
             d->cr->pid, d->cr->uid, d->cr->gid);
     return 0;
 }
+#endif
 
 /*
  * Forks, executes the provided program in the child, and waits for the completion in the parent.
@@ -722,6 +724,7 @@ static bool fork_execve_and_wait_for_completion(const char* filename, char* cons
     }
 }
 
+#if 0
 static constexpr const char plat_policy_cil_file[] = "/system/etc/selinux/plat_sepolicy.cil";
 
 static bool selinux_is_split_policy_device() { return access(plat_policy_cil_file, R_OK) != -1; }
@@ -834,6 +837,7 @@ static void selinux_initialize(bool in_kernel_domain) {
         selinux_init_all_handles();
     }
 }
+#endif
 
 // Set the UDC controller for the ConfigFS USB Gadgets.
 // Read the UDC controller in use from "/sys/class/udc".
@@ -1065,17 +1069,13 @@ int main(int argc, char** argv) {
         // mount("tmpfs", "/dev", "tmpfs", MS_NOSUID, "mode=0755");
         // mkdir("/dev/pts", 0755);
         mkdir("/dev/socket", 0755);
-<<<<<<< HEAD
+#if 0
         mount("devpts", "/dev/pts", "devpts", 0, NULL);
         #define MAKE_STR(x) __STRING(x)
         mount("proc", "/proc", "proc", 0, "hidepid=2,gid=" MAKE_STR(AID_READPROC));
         gid_t groups[] = { AID_READPROC };
         setgroups(arraysize(groups), groups);
-=======
-        // mount("devpts", "/dev/pts", "devpts", 0, NULL);
-        // #define MAKE_STR(x) __STRING(x)
-        // mount("proc", "/proc", "proc", 0, "hidepid=2,gid=" MAKE_STR(AID_READPROC));
->>>>>>> e455e02... init: disable several things to properly boot in the container
+#endif
         mount("sysfs", "/sys", "sysfs", 0, NULL);
         mount("selinuxfs", "/sys/fs/selinux", "selinuxfs", 0, NULL);
         mknod("/dev/kmsg", S_IFCHR | 0600, makedev(1, 11));
@@ -1083,7 +1083,6 @@ int main(int argc, char** argv) {
         mknod("/dev/urandom", S_IFCHR | 0666, makedev(1, 9));
     }
 
-<<<<<<< HEAD
     // Now that tmpfs is mounted on /dev and we have /dev/kmsg, we can actually
     // talk to the outside world...
     InitKernelLogging(argv);
@@ -1095,18 +1094,11 @@ int main(int argc, char** argv) {
             LOG(ERROR) << "Failed to mount required partitions early ...";
             panic();
         }
-=======
-    // We must have some place other than / to create the device nodes for
-    // kmsg and null, otherwise we won't be able to remount / read-only
-    // later on. Now that tmpfs is mounted on /dev, we can actually talk
-    // to the outside world.
-    // open_devnull_stdio();
-    klog_init();
-    klog_set_level(KLOG_NOTICE_LEVEL);
->>>>>>> e455e02... init: disable several things to properly boot in the container
 
+#if 0
         // Set up SELinux, loading the SELinux policy.
         selinux_initialize(true);
+#endif
 
         // We're in the kernel domain, so re-exec init to transition to the init domain now
         // that the SELinux policy has been loaded.
@@ -1156,8 +1148,10 @@ int main(int argc, char** argv) {
         unsetenv("INIT_STARTED_AT");
         unsetenv("INIT_SELINUX_TOOK");
 
+#if 0
         // Now set up SELinux for second stage.
         selinux_initialize(false);
+#endif
     }
 
     // These directories were necessarily created before initial policy load

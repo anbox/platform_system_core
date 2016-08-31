@@ -77,7 +77,7 @@ void property_init() {
 }
 
 static bool check_mac_perms(const std::string& name, char* sctx, struct ucred* cr) {
-
+#if 0
     if (!sctx) {
       return false;
     }
@@ -100,10 +100,12 @@ static bool check_mac_perms(const std::string& name, char* sctx, struct ucred* c
 
     freecon(tctx);
     return has_access;
+#endif
 }
 
 static int check_control_mac_perms(const char *name, char *sctx, struct ucred *cr)
 {
+#if 0
     /*
      *  Create a name prefix out of ctl.<service name>
      *  The new prefix allows the use of the existing
@@ -117,6 +119,9 @@ static int check_control_mac_perms(const char *name, char *sctx, struct ucred *c
         return 0;
 
     return check_mac_perms(ctl_name, sctx, cr);
+#else
+    return 1;
+#endif
 }
 
 std::string property_get(const char* name) {

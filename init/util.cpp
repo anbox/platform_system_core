@@ -94,12 +94,14 @@ unsigned int decode_uid(const char *s) {
 int create_socket(const char *name, int type, mode_t perm, uid_t uid,
                   gid_t gid, const char *socketcon)
 {
+#if 0
     if (socketcon) {
         if (setsockcreatecon(socketcon) == -1) {
             PLOG(ERROR) << "setsockcreatecon(\"" << socketcon << "\") failed";
             return -1;
         }
     }
+#endif
 
     android::base::unique_fd fd(socket(PF_UNIX, type, 0));
     if (fd < 0) {
@@ -107,7 +109,9 @@ int create_socket(const char *name, int type, mode_t perm, uid_t uid,
         return -1;
     }
 
+#if 0
     if (socketcon) setsockcreatecon(NULL);
+#endif
 
     struct sockaddr_un addr;
     memset(&addr, 0 , sizeof(addr));
@@ -130,8 +134,10 @@ int create_socket(const char *name, int type, mode_t perm, uid_t uid,
     int ret = bind(fd, (struct sockaddr *) &addr, sizeof (addr));
     int savederrno = errno;
 
+#if 0
     setfscreatecon(NULL);
     freecon(filecon);
+#endif
 
     if (ret) {
         errno = savederrno;
