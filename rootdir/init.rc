@@ -5,7 +5,7 @@
 #
 
 import /init.environ.rc
-# import /init.usb.rc
+import /init.usb.rc
 import /init.${ro.hardware}.rc
 # import /init.usb.configfs.rc
 import /init.${ro.zygote}.rc
@@ -668,6 +668,3 @@ on property:ro.debuggable=1
 service flash_recovery /system/bin/install-recovery.sh
     class main
     oneshot
-
-service anboxd /system/bin/anboxd
-    class core
