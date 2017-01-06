@@ -78,8 +78,10 @@ ssize_t uevent_kernel_recv(int socket, void *buffer, size_t length, bool require
 
     struct ucred *cred = (struct ucred *)CMSG_DATA(cmsg);
     *uid = cred->uid;
-    if (cred->uid != 0) {
-        /* ignoring netlink message from non-root user */
+    if (cred->uid != 0 && cred->pid != 0) {
+        /* ignoring netlink message from non-root user or
+         * those not coming from the kernel (unprivileged
+         * container case) */
         goto out;
     }
 
