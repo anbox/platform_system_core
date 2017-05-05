@@ -21,6 +21,8 @@
 #include <string.h>
 #include <errno.h>
 #include <stdio.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 
 #include <android-base/file.h>
 
@@ -41,7 +43,29 @@ int qemu_pipe_open(const char* pipeName) {
         return -1;
     }
 
-    int fd = TEMP_FAILURE_RETRY(open("/dev/qemu_pipe", O_RDWR));
+    int fd = -1;
+#if 0
+    fd = TEMP_FAILURE_RETRY(open("/dev/qemu_pipe", O_RDWR));
+#else
+    fd = socket(AF_LOCAL, SOCK_STREAM, 0);
+
+    struct sockaddr_un addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, "/dev/qemu_pipe", sizeof(addr.sun_path));
+
+    if (connect(fd, (struct sockaddr*) &addr, sizeof(addr)) < 0) {
+#if !defined(QEMU_PIPE_FROM_ADB)
+        close(fd);
+#else
+        // Adb renames 'close' to 'unix_close' and marks the original
+        // 'close' as not available.
+        unix_close(fd);
+#endif
+        fd = -1;
+    }
+#endif
+
     if (fd < 0) {
         QEMU_PIPE_DEBUG("%s: Could not open /dev/qemu_pipe: %s", __FUNCTION__,
                         strerror(errno));
