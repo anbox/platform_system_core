@@ -1025,8 +1025,8 @@ void device_init(const char* path, coldboot_callback fn) {
     }
 
     Timer t;
+    coldboot_action_t act = COLDBOOT_FINISH;
     if (false) {
-        coldboot_action_t act;
         if (!path) {
             act = coldboot("/sys/class", fn);
             if (!should_stop_coldboot(act)) {

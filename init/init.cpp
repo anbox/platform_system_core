@@ -505,7 +505,9 @@ static void export_kernel_boot_props() {
     }
 }
 
+#if 0
 static constexpr char android_dt_dir[] = "/proc/device-tree/firmware/android";
+#endif
 
 #if 0
 static bool is_dt_compatible() {
@@ -628,6 +630,7 @@ static int audit_callback(void *data, security_class_t /*cls*/, char *buf, size_
 }
 #endif
 
+#if 0
 /*
  * Forks, executes the provided program in the child, and waits for the completion in the parent.
  * Child's stderr is captured and logged using LOG(ERROR).
@@ -723,6 +726,7 @@ static bool fork_execve_and_wait_for_completion(const char* filename, char* cons
         return false;
     }
 }
+#endif
 
 #if 0
 static constexpr const char plat_policy_cil_file[] = "/system/etc/selinux/plat_sepolicy.cil";
@@ -981,11 +985,13 @@ static bool early_mount() {
         return true;
     }
 
+#if 0
     // first check if device tree fstab entries are compatible
     if (!is_dt_fstab_compatible()) {
         LOG(INFO) << "Early mount skipped (missing/incompatible fstab in device tree)";
         return true;
     }
+#endif
 
     std::unique_ptr<fstab, decltype(&fs_mgr_free_fstab)> tab(
         fs_mgr_read_fstab_dt(), fs_mgr_free_fstab);

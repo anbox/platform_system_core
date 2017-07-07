@@ -51,6 +51,7 @@ using android::base::ParseInt;
 using android::base::StringPrintf;
 using android::base::WriteStringToFile;
 
+#if 0
 static std::string ComputeContextFromExecutable(std::string& service_name,
                                                 const std::string& service_path) {
     std::string computed_context;
@@ -87,6 +88,7 @@ static std::string ComputeContextFromExecutable(std::string& service_name,
     }
     return computed_context;
 }
+#endif
 
 static void SetUpPidNamespace(const std::string& service_name) {
     constexpr unsigned int kSafeFlags = MS_NODEV | MS_NOEXEC | MS_NOSUID;
@@ -605,6 +607,7 @@ bool Service::Start() {
             return false;
         }
     }
+#endif
 
     LOG(INFO) << "starting service '" << name_ << "'...";
 
@@ -614,7 +617,6 @@ bool Service::Start() {
     } else {
         pid = fork();
     }
-#endif
 
     if (pid == 0) {
         umask(077);

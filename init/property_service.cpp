@@ -101,6 +101,7 @@ static bool check_mac_perms(const std::string& name, char* sctx, struct ucred* c
     freecon(tctx);
     return has_access;
 #endif
+    return true;
 }
 
 static int check_control_mac_perms(const char *name, char *sctx, struct ucred *cr)
